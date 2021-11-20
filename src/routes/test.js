@@ -1,15 +1,33 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { priceMapper } from "../db";
-const symbols = {
+// const unsub = {
+//   method: "UNSUBSCRIBE",
+//   params: ["bookTicker"],
+//   id: 1,
+// };
+
+const coinPair = "btcusdt";
+const streamName = () => ({
+  combinedStream: "wss://stream.binance.com:9443/stream",
   miniTicker: "wss://stream.binance.com:9443/ws/!miniTicker@arr",
-  bookTicker: "wss://stream.binance.com:9443/ws/btcusdt@bookTicker",
-};
+  singlebookTicker: `wss://stream.binance.com:9443/ws/${coinPair}@bookTicker`,
+  allbookTicker: "wss://stream.binance.com:9443/ws/!bookTicker",
+});
 function Test() {
-  const [bids, setBids] = useState([0]);
-  console.log(symbols.miniTicker);
-  //   const ws = new WebSocket(
-  //     "wss://stream.binance.com:9443/ws/btcusdt@miniTicker"
-  //   );
+  //   const [bids, setBids] = useState([0]);
+  console.log(streamName("btcusdt").allbookTicker);
+  const ws = new WebSocket(streamName().singlebookTicker);
+  //  ws.onopen = (event) => {
+  //   ws.send(JSON.stringify(apiCall));
+  // };
+  const closeConnection = () => {
+    console.log("insde clsoeConnection");
+    // ws.send(JSON.stringify(unsub));
+  };
+  ws.onmessage = function (event) {
+    const json = JSON.parse(event.data);
+    console.log("json", json);
+  };
   //   ws.onmessage = function (event) {
   //     const json = JSON.parse(event.data);
   //     console.log(event.stream);
@@ -27,6 +45,7 @@ function Test() {
   return (
     <div>
       <p>hello</p>
+      <button onClick={closeConnection}>close</button>
       {/* {pricePraser} */}
     </div>
   );

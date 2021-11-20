@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import PriceTable from "../component/PriceTable";
 
 //to be used when combinedStream is used cause it sends apiCall parameter with itself when
 //ws.open is being used
@@ -7,19 +8,19 @@ const apiCall = {
   params: ["btcusdt@aggTrade", "btcusdt@depth"],
   id: 1,
 };
-const streamName = {
+const coinPair = "btcusdt";
+const streamName = () => ({
   combinedStream: "wss://stream.binance.com:9443/stream",
   miniTicker: "wss://stream.binance.com:9443/ws/!miniTicker@arr",
-  singlebookTicker: "wss://stream.binance.com:9443/ws/btcusdt@bookTicker",
+  singlebookTicker: `wss://stream.binance.com:9443/ws/${coinPair}@bookTicker`,
   allbookTicker: "wss://stream.binance.com:9443/ws/!bookTicker",
-};
+});
 function Binance() {
-  const [bids, setBids] = useState([0]);
-  //   var bids;
-  console.log(streamName.stream);
+  // const [bids, setBids] = useState([0]);
+  var orderBook;
 
   useEffect(() => {
-    const ws = new WebSocket(streamName.singlebookTicker);
+    const ws = new WebSocket(streamName().miniTicker);
     console.log(JSON.stringify(apiCall));
 
     //only use when websocket connection is using streamName.combinedStream
@@ -28,12 +29,17 @@ function Binance() {
     //   ws.send(JSON.stringify(apiCall));
     // };
     ws.onmessage = function (event) {
+      // console.log({ event });
       const json = JSON.parse(event.data);
-      console.log(event.stream);
+      console.log("json data", json);
+      // console.log(event.data);
       try {
-        if (json.event === "data") {
-          setBids(json.data.bids.slice(0, 5));
-        }
+        // console.log(event.data);
+        orderBook = json;
+        // if (json.event === "data") {
+        //   console.log("inside ifstatement");
+        //   setBids(json.data.bids.slice(0, 5));
+        // }
       } catch (err) {
         console.log(err);
       }
@@ -41,15 +47,21 @@ function Binance() {
     //clean up function
     return () => ws.close();
   }, []);
-  const firstBids = bids.map((item, index) => (
-    <div key={index}>
-      <p> {item}</p>
-    </div>
-  ));
+  // const firstBids = bids.map((item, index) => (
+  //   <div key={index}>
+  //     <p> {item}</p>
+  //   </div>
+  // ));
 
   return (
     <div>
-      some useDebugValue(value) afd<p>askjdfh</p>
+      BITCOIN
+      {/* {bids.slice(0, 40).map((item, index) => (
+        <div key={index}>
+          <p>{item.o}</p>
+        </div>
+      ))} */}
+      <PriceTable orderBook={orderBook} />
     </div>
   );
 }
