@@ -14,6 +14,7 @@ function Bitstamp() {
     };
     ws.onmessage = function (event) {
       const json = JSON.parse(event.data);
+      console.log("json", json);
       try {
         if (json.event === "data") {
           setBids(json.data.bids.slice(0, 5));

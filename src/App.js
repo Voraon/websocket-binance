@@ -1,6 +1,6 @@
 import React from "react";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
-import { Binance, Bitstamp, Test, BinanceWazirx } from "./routes";
+import { Binance, Bitstamp, Test, BinanceWazirx, Wazirx } from "./routes";
 
 export default function App() {
   return (
@@ -17,6 +17,10 @@ export default function App() {
             <li>
               <Link to="/binance">Binance</Link>
             </li>
+
+            <li>
+              <Link to="/wazirx">Wazirx</Link>
+            </li>
             <li>
               <Link to="/test">Test</Link>
             </li>
@@ -28,6 +32,9 @@ export default function App() {
           </Route>
           <Route path="/binance">
             <Binance />
+          </Route>{" "}
+          <Route path="/wazirx">
+            <Wazirx />
           </Route>
           <Route exact path="/">
             <BinanceWazirx />

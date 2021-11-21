@@ -16,22 +16,22 @@ const streamName = () => ({
   allbookTicker: "wss://stream.binance.com:9443/ws/!bookTicker",
 });
 function Binance() {
-  // const [bids, setBids] = useState([0]);
+  const [bids, setBids] = useState([0]);
   var orderBook;
 
   useEffect(() => {
-    const ws = new WebSocket(streamName().miniTicker);
-    console.log(JSON.stringify(apiCall));
+    const ws = new WebSocket(streamName().singlebookTicker);
+    // console.log(JSON.stringify(apiCall));
 
     //only use when websocket connection is using streamName.combinedStream
     // as it catches .open and sends apiCall parametes
-    // ws.onopen = (event) => {
-    //   ws.send(JSON.stringify(apiCall));
-    // };
+    ws.onopen = (event) => {
+      ws.send(JSON.stringify(apiCall));
+    };
     ws.onmessage = function (event) {
       // console.log({ event });
       const json = JSON.parse(event.data);
-      console.log("json data", json);
+      // console.log("json data", json);
       // console.log(event.data);
       try {
         // console.log(event.data);
@@ -61,7 +61,7 @@ function Binance() {
           <p>{item.o}</p>
         </div>
       ))} */}
-      <PriceTable orderBook={orderBook} />
+      <PriceTable orderBook={bids} />
     </div>
   );
 }

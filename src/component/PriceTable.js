@@ -1,46 +1,49 @@
 import React from "react";
 import { DataGrid } from "@mui/x-data-grid";
-const columns = [
-  { field: "id", headerName: "ID", width: 70 },
-  { field: "symbol", headerName: "Symbol", width: 300 },
-  { field: "askingPrice", headerName: "AskingPrice", width: 330 },
-  { field: "buyingPrice", headerName: "BuyingPrice", width: 330 },
-  { field: "volume", headerName: "Volume", width: 150 },
-  // {
-  //   field: "age",
-  //   headerName: "Age",
-  //   type: "number",
-  //   width: 90,
-  // },
-  // {
-  //   field: "fullName",
-  //   headerName: "Full name",
-  //   description: "This column has a value getter and is not sortable.",
-  //   sortable: false,
-  //   width: 160,
-  //   valueGetter: (params) =>
-  //     `${params.getValue(params.id, "buyingPrice") || ""} ${
-  //       params.getValue(params.id, "askingPrice") || ""
-  //     }`,
-  // },
-];
+import { testData } from "../utils/testData";
 
-export default function PriceTable(orderBook) {
-  console.log("bids", orderBook?.orderBook);
-  const ord = orderBook?.orderBook;
-
-  const rows1 = ord?.map((item, index) => ({
-    id: index,
-    askingPrice: item.o,
-    buyingPrice: item.h,
-    symbol: item.s,
-    volume: item.v,
+export default function PriceTable({ rows, orderbook }) {
+  console.log("rwos", { rows });
+  // const ord = orderBook.orderBook;
+  // const rows1 = ord?.map((item, index) => ({
+  //   id: index,
+  //   E: item.E,
+  //   T: item.T,
+  //   U: item.U,
+  //   a: item.a,
+  //   b: item.b,
+  //   c: item.c,
+  //   h: item.h,
+  //   l: item.l,
+  //   o: item.o,
+  //   q: item.q,
+  //   s: item.s,
+  //   u: item.u,
+  // }));
+  // creates dynamic column
+  const columnHeader = Object.keys(testData[0]).map((item) => ({
+    field: item,
+    headerName: item,
   }));
+
+  //by spreading columnHeader we can add additional field as per useage.
+  // const columnHeader = [{ field: "id", headerName: "ID" }, ...columnHeader];
+
+  // const columnHeader = header.map((item) => ({
+  //   field: item,
+  //   headerName: item,
+  // }));
+
+  // const rows1 = testData.map((rowItem, rowIndex) =>
+  //   header.map((headerItem, colIndex) => ({
+  //     headerItem: rowItem.headerItem,
+  //   }))
+  // );
   return (
     <div style={{ height: "100%", width: "100%" }}>
       <DataGrid
-        rows={rows1}
-        columns={columns}
+        rows={rows}
+        columns={columnHeader}
         pageSize={10}
         rowsPerPageOptions={[5]}
       />
